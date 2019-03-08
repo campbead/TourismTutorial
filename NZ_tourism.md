@@ -1,12 +1,3 @@
----
-title: "NZ_tourism_data"
-author: "Adam J Campbell"
-date: "3/2/2019"
-output: 
-  html_document: 
-    keep_md: yes
----
-
 # New Zealand Tourism Data
 This is a quick tutorial to download and begin to analyse New Zealand tourism data using [R](https://www.r-project.org/). There is a lots of data availabe to analyze but in this example we are going to look at the occupancy rate of accomidations in Dunedin. 
 ## A note about this project and open data
@@ -19,12 +10,11 @@ We'll first begin by downloading the data.  Stats NZ Infoshare is a great tool t
 In this quick example I will calculate the occupancy rate for accomidations in Dunedin by month and then display this data as bar charts.  
 
 First let's load dplyr, an incredibly useful tool for data manipulation
-```{r include=FALSE}
-library(dplyr)
-```
+
 
 The next step we load the the datafile and do a bit of data manipuation to adjust the names of the columns and to discard the some rows we don't need.
-```{r}
+
+```r
 datafile = 'ACS475801_20190302_015859_74.csv'
 tourism <- read.csv(datafile, skip = 3, header = T)
 tourism <- head(tourism,-21)
@@ -32,19 +22,22 @@ colnames(tourism)<- c("Date" , "Number_of_establishments","Capacity_daily", "Cap
 ```
 
 We can calculate the occupancy rate by the divividing the monthly occupancy by the monthy capacity.
-```{r}
+
+```r
 tourism$Occupancy_rate <- tourism$Occupancy_monthly / tourism$Capacity_monthly
 ```
 
 Next we do a bit of manipulation to make the dates more accessible.
-```{r}
+
+```r
 tourism$Date_formated <- as.Date(paste(tourism$Date, "15"),format='%YM%m %d')
 tourism$Date_month <- format(tourism$Date_formated, "%m")
 tourism$Date_year <- format(tourism$Date_formated, "%Y")
 ```
 
 Let's plot occupancy rate by month in a bar chart.
-```{r}
+
+```r
 monthly_tourism <- tourism %>%
   group_by(Date_month) %>%
   summarize(mean_occ = mean(Occupancy_rate)*100, std_occ = sd(Occupancy_rate)*100)
@@ -55,8 +48,11 @@ arrows(barCenters, monthly_tourism$mean_occ-monthly_tourism$std_occ,
        barCenters, monthly_tourism$mean_occ+monthly_tourism$std_occ,angle=90,code=3)
 ```
 
+![](NZ_tourism_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
 Now lets try that for the most recent 5 years. Here all I have changed in the filter within the dpylr block
-```{r}
+
+```r
 monthly_tourism_2014 <- tourism %>%
   filter(Date_year > 2013) %>% # select dates after 2013
   group_by(Date_month) %>%
@@ -67,6 +63,8 @@ barCenters <- barplot(height = monthly_tourism_2014$mean_occ,
 arrows(barCenters, monthly_tourism_2014$mean_occ-monthly_tourism_2014$std_occ,
        barCenters, monthly_tourism_2014$mean_occ+monthly_tourism_2014$std_occ,angle=90,code=3)
 ```
+
+![](NZ_tourism_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ## Conclusion
 Thanks for looking over this quick project.  The Rmd file is available here in this github repository [NZ_tourism.Rmd](https://github.com/campbead/TourismTutorial/blob/master/NZ_tourism.Rmd).
