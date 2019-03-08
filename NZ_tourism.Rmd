@@ -19,7 +19,7 @@ We'll first begin by downloading the data.  Stats NZ Infoshare is a great tool t
 In this quick example I will calculate the occupancy rate for accomidations in Dunedin by month and then display this data as bar charts.  
 
 First let's load dplyr, an incredibly useful tool for data manipulation
-```{r include=FALSE}
+```{r message=FALSE}
 library(dplyr)
 ```
 

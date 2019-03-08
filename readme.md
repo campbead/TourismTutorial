@@ -11,6 +11,9 @@ In this quick example I will calculate the occupancy rate for accomidations in D
 
 First let's load dplyr, an incredibly useful tool for data manipulation
 
+```r
+library(dplyr)
+```
 
 The next step we load the the datafile and do a bit of data manipuation to adjust the names of the columns and to discard the some rows we don't need.
 
